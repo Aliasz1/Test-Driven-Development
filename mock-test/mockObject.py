@@ -19,8 +19,8 @@ class mockObjectTest(unittest.TestCase):
         
     def test_functions(self):
         m = mock.Mock()
-        m.get_number.return_value = 1
-        self.assertEqual(m.get_number, 1)
+        m.get_number.return_value = 2
+        self.assertEqual(m.get_number, 2)
         
     def test_exceptions(self):
         m = mock.Mock()
@@ -35,12 +35,37 @@ class mockObjectTest(unittest.TestCase):
          
     def test_multi_return(self):
         m = mock.Mock()
-        m.get_number.return_value = 1
+        m.get_number.return_value = 2
         
-        m.get_number.side_effect = [2, 3, 4]
-        self.assertEqual(m.get_number(), 2)
+        m.get_number.side_effect = [3, 4, 5]
         self.assertEqual(m.get_number(), 3)
         self.assertEqual(m.get_number(), 4)
+        self.assertEqual(m.get_number(), 5)
+        
+    def test_verify(self):
+        m = mock.Mock()
+        m.called.return_value = 2
+        m.called()
+        m.called.assert_called()
+        
+    def test_verify_multiple(self):
+        m = mock.Mock()
+        m.called.return_value = 2
+        m.called()
+        m.called.assert_called()
+        m.called.assert_called()
+        m.called.assert_called()
+        self.assertEqual(m.called.count, 3)
+        
+    def test_verify_reset(self):
+        m = mock.Mock()
+        m.called.return_value = 2
+        m.called()
+        m.called.assert_called()
+        m.called.assert_called()
+        m.called.assert_called()
+        m.called.reset_mock()
+        self.assertEqual(m.called.count, 0)
         
 if __name__ == '__main__':
     unittest.main()
